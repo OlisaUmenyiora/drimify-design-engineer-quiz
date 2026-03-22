@@ -1,5 +1,15 @@
 import type { Handler } from '@netlify/functions'
 
+const textPlain: Record<string, string> = {
+  'Content-Type': 'text/plain; charset=utf-8',
+}
+
+const corsPreflight: Record<string, string> = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 /**
  * Forwards `/api/pexels/v1/...` → `https://api.pexels.com/v1/...` with server-side auth.
  * Keeps PEXELS_API_KEY off the client bundle.
@@ -8,17 +18,17 @@ export const handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
+      headers: corsPreflight,
       body: '',
     }
   }
 
   if (event.httpMethod !== 'GET' && event.httpMethod !== 'HEAD') {
-    return { statusCode: 405, body: 'Method Not Allowed' }
+    return {
+      statusCode: 405,
+      headers: textPlain,
+      body: 'Method Not Allowed',
+    }
   }
 
   const key =
@@ -26,9 +36,12 @@ export const handler: Handler = async (event) => {
     process.env.VITE_PEXELS_API_KEY?.trim() ||
     ''
   if (!key) {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json; charset=utf-8',
+    }
     return {
       statusCode: 503,
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      headers,
       body: JSON.stringify({
         error: 'Missing PEXELS_API_KEY in Netlify environment variables.',
       }),
@@ -42,7 +55,7 @@ export const handler: Handler = async (event) => {
     pathname = u.pathname.replace(/^\/api\/pexels/, '') || '/'
     search = u.search
   } catch {
-    return { statusCode: 400, body: 'Bad request URL' }
+    return { statusCode: 400, headers: textPlain, body: 'Bad request URL' }
   }
 
   const target = `https://api.pexels.com${pathname}${search}`
@@ -54,10 +67,14 @@ export const handler: Handler = async (event) => {
   const contentType =
     res.headers.get('content-type') ?? 'application/json; charset=utf-8'
 
+  const outHeaders: Record<string, string> = {
+    'Content-Type': contentType,
+  }
+
   if (event.httpMethod === 'HEAD') {
     return {
       statusCode: res.status,
-      headers: { 'Content-Type': contentType },
+      headers: outHeaders,
       body: '',
     }
   }
@@ -65,7 +82,7 @@ export const handler: Handler = async (event) => {
   const body = await res.text()
   return {
     statusCode: res.status,
-    headers: { 'Content-Type': contentType },
+    headers: outHeaders,
     body,
   }
 }
