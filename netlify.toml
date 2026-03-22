@@ -1,0 +1,27 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# API routes must be listed before the SPA fallback.
+[[redirects]]
+  from = "/api/generate-quiz"
+  to = "/.netlify/functions/generate-quiz"
+  status = 200
+
+[[redirects]]
+  from = "/api/pexels/*"
+  to = "/.netlify/functions/pexels-proxy"
+  status = 200
+
+# Single-page app: serve index.html for client-side routes (direct visits, refresh).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Env vars (set in Netlify UI → Site settings → Environment variables):
+# - ANTHROPIC_API_KEY  (required for AI quiz generation)
+# - PEXELS_API_KEY     (optional; for Pexels images in AI flow + editor search)

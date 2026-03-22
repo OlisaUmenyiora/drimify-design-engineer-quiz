@@ -1,73 +1,21 @@
-# React + TypeScript + Vite
+# Are You a New Era Designer?
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Gamified quiz (Drimify-style campaign patterns) built with React, Vite, Tailwind CSS v4, shadcn/ui (Base UI), Framer Motion, Zustand, and a canvas scratch-card reveal. **Independent portfolio piece** (not affiliated with Drimify). Iterated with **Cursor** as the AI-native editor.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `npm install`: install dependencies
+- `npm run dev`: local dev server
+- `npm run build`: production build
+- `npm run preview`: preview the production build
+- `npm run lint`: ESLint
 
-## React Compiler
+## Customize content
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Default questions live in [`src/data/quiz.ts`](src/data/quiz.ts).
+- Use **Edit quiz** in the app to change questions with a simple form (saved to `localStorage` under `new-era-quiz-v1`).
+- **Load sample quiz (demo)** loads a short alternate question set (then save if you want to keep it).
 
-## Expanding the ESLint configuration
+## Theme
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The Drimify-style palette (primary **#1bc5bd**, accent pink, dark mode) is defined in [`src/index.css`](src/index.css). There is a single default appearance; no alternate theme presets.

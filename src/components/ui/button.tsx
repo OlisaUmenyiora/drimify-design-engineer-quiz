@@ -1,3 +1,6 @@
+/* eslint-disable react-refresh/only-export-components -- shadcn exports variants with Button */
+"use client"
+
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -8,7 +11,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        default:
+          "bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] [a]:hover:bg-[var(--primary-hover)]",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
@@ -18,6 +22,11 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
+        drimify:
+          "border-0 bg-[var(--drimify-blue)] text-white shadow-md shadow-[var(--drimify-blue)]/25 hover:bg-[var(--primary-hover)] hover:text-white hover:shadow-[var(--primary-hover)]/30",
+        /** Header / toolbar on the light frosted shell; use with size `sm` */
+        shell:
+          "border border-slate-300/90 bg-white/85 text-slate-700 shadow-sm backdrop-blur-sm hover:border-slate-400 hover:bg-white hover:text-slate-900 hover:shadow active:bg-slate-100/90 aria-expanded:border-slate-400 aria-expanded:bg-white aria-expanded:text-slate-900 aria-expanded:shadow-sm focus-visible:border-[var(--drimify-blue)] focus-visible:ring-[var(--drimify-blue)]/30",
       },
       size: {
         default:

@@ -1,13 +1,12 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,82 +48,129 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --drimify-blue: #1bc5bd;
+    --drimify-pink: #ff6b9c;
+    --drimify-dark: #0f1117;
+    --drimify-light: #f7f8fa;
+    --gradient-primary: linear-gradient(90deg, #1bc5bd, #ff6b9c);
+    --primary-hover: #2dd4cf;
+
+    --background: #f7f8fa;
+    --foreground: #0f1117;
+    --card: #ffffff;
+    --card-foreground: #0f1117;
+    --popover: #ffffff;
+    --popover-foreground: #0f1117;
+    --primary: #1bc5bd;
+    --primary-foreground: #ffffff;
+    --secondary: #e8eaef;
+    --secondary-foreground: #0f1117;
+    --muted: #e8eaef;
+    --muted-foreground: #5c6370;
+    --accent: #ff6b9c;
+    --accent-foreground: #0f1117;
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
+    --border: #d8dbe2;
+    --input: #d8dbe2;
+    --ring: #1bc5bd;
+    --chart-1: #1bc5bd;
+    --chart-2: #ff6b9c;
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --radius: 0.75rem;
+    --sidebar: #f7f8fa;
+    --sidebar-foreground: #0f1117;
+    --sidebar-primary: #1bc5bd;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e8eaef;
+    --sidebar-accent-foreground: #0f1117;
+    --sidebar-border: #d8dbe2;
+    --sidebar-ring: #1bc5bd;
+
+    /**
+     * AppShell header stack (see AppShell `<header>`):
+     * pt max(1rem, safe-top) + toolbar row (h-8) + pb-3.
+     * Add --shell-content-gap for space between header and page content.
+     */
+    --shell-toolbar-row: 2rem;
+    --shell-header-pb: 0.75rem;
+    --shell-content-gap: 0.75rem;
+    --shell-content-padding-top: calc(
+      max(1rem, env(safe-area-inset-top, 0px)) + var(--shell-toolbar-row) +
+        var(--shell-header-pb) + var(--shell-content-gap)
+    );
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    --background: #0f1117;
+    --foreground: #f7f8fa;
+    --card: #f7f8fa;
+    --card-foreground: #0f1117;
+    --popover: #1a1d26;
+    --popover-foreground: #f7f8fa;
+    --primary: #1bc5bd;
+    --primary-foreground: #ffffff;
+    --secondary: #1f232d;
+    --secondary-foreground: #f7f8fa;
+    --muted: #1f232d;
+    --muted-foreground: #9aa3b5;
+    --accent: #ff6b9c;
+    --accent-foreground: #0f1117;
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
+    --border: oklch(1 0 0 / 12%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
+    --ring: #1bc5bd;
+    --chart-1: #1bc5bd;
+    --chart-2: #ff6b9c;
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar: #141820;
+    --sidebar-foreground: #f7f8fa;
+    --sidebar-primary: #1bc5bd;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #1f232d;
+    --sidebar-accent-foreground: #f7f8fa;
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-ring: #1bc5bd;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
-    @apply bg-background text-foreground;
-    }
+    @apply bg-slate-100 antialiased;
+    /* hidden avoids clipping fixed layers (e.g. canvas-confetti) in some browsers; clip was too aggressive */
+    overflow-x: hidden;
+  }
   html {
     @apply font-sans;
-    }
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  #root {
+    min-height: 100dvh;
+  }
+}
+
+@layer utilities {
+  /** Clears fixed footer + home indicator on notched phones */
+  .pb-safe-content {
+    padding-bottom: max(7rem, calc(env(safe-area-inset-bottom, 0px) + 5.5rem));
+  }
+  /** Main column top inset: clears shell header + one consistent gutter (all pages). */
+  .pt-shell-content {
+    padding-top: var(--shell-content-padding-top);
+  }
+  .bg-drimify-gradient {
+    background-image: var(--gradient-primary);
+  }
+  .text-gradient-drimify {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
