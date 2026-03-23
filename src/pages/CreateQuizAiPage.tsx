@@ -2,12 +2,14 @@ import { motion } from 'framer-motion'
 import {
   ArrowUp,
   Brain,
+  ChevronLeft,
+  ChevronRight,
   Mic,
   Paperclip,
   Sparkles,
   Zap,
 } from 'lucide-react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { DEFAULT_QUIZ_TITLE, type QuizQuestion } from '@/data/quiz'
@@ -74,6 +76,46 @@ export function CreateQuizAiPage() {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const recRef = useRef<InstanceType<SpeechRecCtor> | null>(null)
+  const topicsScrollRef = useRef<HTMLDivElement>(null)
+  const [topicsCanScrollLeft, setTopicsCanScrollLeft] = useState(false)
+  const [topicsCanScrollRight, setTopicsCanScrollRight] = useState(false)
+
+  const updateTopicsScrollState = useCallback(() => {
+    const el = topicsScrollRef.current
+    if (!el) {
+      return
+    }
+    const { scrollLeft, scrollWidth, clientWidth } = el
+    setTopicsCanScrollLeft(scrollLeft > 2)
+    setTopicsCanScrollRight(scrollLeft < scrollWidth - clientWidth - 2)
+  }, [])
+
+  useEffect(() => {
+    if (step !== 'compose') {
+      return
+    }
+    const el = topicsScrollRef.current
+    if (!el) {
+      return
+    }
+    updateTopicsScrollState()
+    el.addEventListener('scroll', updateTopicsScrollState, { passive: true })
+    const ro = new ResizeObserver(() => updateTopicsScrollState())
+    ro.observe(el)
+    return () => {
+      el.removeEventListener('scroll', updateTopicsScrollState)
+      ro.disconnect()
+    }
+  }, [step, updateTopicsScrollState])
+
+  const scrollTopics = useCallback((dir: -1 | 1) => {
+    const el = topicsScrollRef.current
+    if (!el) {
+      return
+    }
+    const amount = Math.min(240, Math.max(160, el.clientWidth * 0.55))
+    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
+  }, [])
 
   const speechSupported = Boolean(getSpeechRecognitionCtor())
 
@@ -302,24 +344,53 @@ export function CreateQuizAiPage() {
               <p className="text-center text-xs font-medium tracking-wide text-slate-500 uppercase">
                 Quick topics
               </p>
-              <div className="-mx-1 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
-                {QUICK_TOPICS.map((label) => (
-                  <button
-                    key={label}
-                    type="button"
-                    disabled={loading}
-                    onClick={() => {
-                      setTopic((prev) =>
-                        prev.trim()
-                          ? `${prev.trim()}\n${label}`
-                          : label,
-                      )
-                    }}
-                    className="shrink-0 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-left text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-white disabled:opacity-50"
-                  >
-                    {label}
-                  </button>
-                ))}
+              <div className="flex items-stretch gap-1.5 sm:gap-2">
+                <button
+                  type="button"
+                  disabled={loading || !topicsCanScrollLeft}
+                  onClick={() => scrollTopics(-1)}
+                  aria-label="Scroll quick topics left"
+                  className={cn(
+                    'flex size-9 shrink-0 items-center justify-center self-center rounded-full border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-white disabled:pointer-events-none disabled:opacity-35',
+                  )}
+                >
+                  <ChevronLeft className="size-5" aria-hidden />
+                </button>
+                <div
+                  ref={topicsScrollRef}
+                  className="min-w-0 flex-1 touch-pan-x overflow-x-auto pb-1 pt-0.5 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
+                >
+                  <div className="flex w-max min-w-full gap-2">
+                    {QUICK_TOPICS.map((label) => (
+                      <button
+                        key={label}
+                        type="button"
+                        disabled={loading}
+                        onClick={() => {
+                          setTopic((prev) =>
+                            prev.trim()
+                              ? `${prev.trim()}\n${label}`
+                              : label,
+                          )
+                        }}
+                        className="shrink-0 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-left text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-white disabled:opacity-50"
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={loading || !topicsCanScrollRight}
+                  onClick={() => scrollTopics(1)}
+                  aria-label="Scroll quick topics right"
+                  className={cn(
+                    'flex size-9 shrink-0 items-center justify-center self-center rounded-full border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-white disabled:pointer-events-none disabled:opacity-35',
+                  )}
+                >
+                  <ChevronRight className="size-5" aria-hidden />
+                </button>
               </div>
             </div>
           </>
@@ -330,20 +401,26 @@ export function CreateQuizAiPage() {
                 <Sparkles className="size-4 text-primary" aria-hidden />
                 Preview ({previewQuestions?.length ?? 0} questions)
               </div>
-              <ul className="max-h-[min(52vh,28rem)] space-y-6 overflow-y-auto pr-1 text-sm">
+              <ul className="max-h-[min(52vh,28rem)] space-y-5 overflow-y-auto pr-1 text-sm sm:space-y-6">
                 {previewQuestions?.map((q, i) => (
-                  <li key={q.id} className="space-y-2">
-                    <p className="font-medium text-slate-900">
-                      {i + 1}. {q.prompt}
+                  <li
+                    key={q.id}
+                    className="rounded-xl border border-slate-200/80 bg-white/85 px-4 py-4 shadow-sm sm:px-5 sm:py-5"
+                  >
+                    <p className="text-[15px] font-semibold leading-snug text-slate-900">
+                      <span className="mr-1.5 tabular-nums text-slate-500">
+                        {i + 1}.
+                      </span>
+                      {q.prompt}
                     </p>
-                    <ul className="space-y-1.5 text-slate-700">
+                    <ul className="mt-4 space-y-2.5 border-t border-slate-100 pt-4 text-slate-700">
                       {q.options.map((o) => {
                         const isModern = o.modernPoints === 1
                         const isTraditional = o.traditionalPoints === 1
                         return (
                           <li
                             key={o.id}
-                            className="flex items-start gap-2 py-0.5"
+                            className="flex items-start gap-2.5"
                           >
                             <span
                               className={cn(
@@ -356,7 +433,7 @@ export function CreateQuizAiPage() {
                               )}
                               aria-hidden
                             />
-                            <span className="min-w-0 flex-1 text-sm text-slate-800">
+                            <span className="min-w-0 flex-1 text-sm leading-relaxed text-slate-800">
                               {o.label}
                             </span>
                           </li>
@@ -364,7 +441,7 @@ export function CreateQuizAiPage() {
                       })}
                     </ul>
                     {q.imageUrl ? (
-                      <p className="mt-2 text-xs text-slate-500">
+                      <p className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500">
                         Image attached (Pexels)
                       </p>
                     ) : null}

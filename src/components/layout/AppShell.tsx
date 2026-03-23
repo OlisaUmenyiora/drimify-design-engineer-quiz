@@ -19,8 +19,7 @@ import { useEffect } from 'react'
 export function AppShell() {
   const mode = useAppStore((s) => s.mode)
   const goHome = useAppStore((s) => s.goHome)
-  const backToLanding = useAppStore((s) => s.backToLanding)
-  const goToCreateQuiz = useAppStore((s) => s.goToCreateQuiz)
+  const goBack = useAppStore((s) => s.goBack)
   const screen = useQuizStore((s) => s.currentScreen)
   const prefs = useMotionPrefs()
   const hydrateFromStorage = useQuizStore((s) => s.hydrateFromStorage)
@@ -36,11 +35,7 @@ export function AppShell() {
     mode === 'createManual'
 
   const handleCreateBack = () => {
-    if (mode === 'createAi') {
-      goToCreateQuiz()
-    } else {
-      backToLanding()
-    }
+    goBack()
   }
 
   return (
